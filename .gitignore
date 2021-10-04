@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/HMS.API/bin/Debug/net5.0
+/HMS.API/obj
+/HMS.Data/bin/Debug/net5.0
+/HMS.Data/obj
+/HMS.Repository/bin/Debug/net5.0
+/HMS.Repository/obj
+/HMS.Services/bin/Debug/net5.0
+/HMS.Services/obj
