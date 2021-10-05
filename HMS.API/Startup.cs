@@ -20,7 +20,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,7 +44,7 @@ namespace HMS.API
             services.AddControllers();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<ILoginTokenService, LoginTokenService>();
-            services.AddTransient<ILoginUserService, LoginUserService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddDbContext<HospitalContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
@@ -51,8 +53,6 @@ namespace HMS.API
                 {
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
                 });
@@ -71,27 +71,44 @@ namespace HMS.API
                     }
                 });
             });
-            //services.AddIdentity<UserFormModel, IdentityRole>()
-            //    .AddEntityFrameworkStores<HospitalContext>()
-            //    .AddDefaultTokenProviders();
+
+            #region For Identity
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<HospitalContext>()
+                    .AddDefaultTokenProviders();
+            #endregion
+
+            #region Adding Authentication
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+            #endregion
+
+            #region JWT bearer
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
                     ValidIssuer = Configuration["JWT:JwtIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:JwtKey"]))
+                    ValidAudience = Configuration["JWT:JwtIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:JwtKey"])),
+                    ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };
             });
+            services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("ClearanceLevel1", policy => policy.RequireClaim("ClearanceLevel", "1", "2"));
+                cfg.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+                //cfg.AddPolicy("User", policy => policy.RequireClaim("type", "User"));
+                //cfg.AddPolicy("ClearanceLevel2", policy => policy.RequireClaim("ClearanceLevel", "2"));
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

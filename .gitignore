@@ -10,3 +10,6 @@
 /HMS.Repository/obj
 /HMS.Services/bin/Debug/net5.0
 /HMS.Services/obj
+/.vs/HMS/config/applicationhost.config
+/.vs/HMS/DesignTimeBuild/.dtbcache.v2
+/.vs/HMS/v16/.suo

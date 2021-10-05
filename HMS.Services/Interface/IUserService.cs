@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace HMS.Services.Interface
 {
-    public interface ILoginUserService
+    public interface IUserService
     {
-        //IEnumerable<User> GetUserDetails(UserFormModel loginUser);
         IEnumerable<User> GetUserDetails(LoginFormModel loginUser);
     }
 }

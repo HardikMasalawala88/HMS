@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Data.ContextModels
 {
-    public class HospitalContext : DbContext
+    public class HospitalContext : IdentityDbContext<ApplicationUser>
     {
         public HospitalContext(DbContextOptions<HospitalContext> options) : base(options)
         {
@@ -45,7 +45,7 @@ namespace HMS.Data.ContextModels
                    MobileNo = "9879555131",
                    Gender = "Male",
                    RoleId = 1,
-                   UserName = "Admin1",
+                   Username = "Admin1",
                    Password = "Admin1"
                },
                new User
@@ -58,7 +58,7 @@ namespace HMS.Data.ContextModels
                    MobileNo = "81569992354",
                    Gender = "FeMale",
                    RoleId = 2,
-                   UserName = "User1",
+                   Username = "User1",
                    Password = "User1"
                }
            );

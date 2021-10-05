@@ -19,7 +19,7 @@ namespace HMS.Data.ModelClassMap
             entityBuilder.Property(t => t.MobileNo).IsRequired();
             entityBuilder.Property(t => t.City).IsRequired();
             entityBuilder.Property(t => t.Gender).IsRequired();
-            entityBuilder.Property(t => t.UserName).IsRequired();
+            entityBuilder.Property(t => t.Username).IsRequired();
             entityBuilder.Property(t => t.RoleId).IsRequired();
         }
     }

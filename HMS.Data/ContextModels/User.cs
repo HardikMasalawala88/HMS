@@ -19,7 +19,7 @@ namespace HMS.Data.ContextModels
         public string Gender { get; set; }
         public long RoleId { get; set; }
         public virtual Role Roles { get; set; }
-        public string UserName { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 }

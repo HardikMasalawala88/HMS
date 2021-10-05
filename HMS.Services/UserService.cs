@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace HMS.Services
 {
-    public class LoginUserService : ILoginUserService
+    public class UserService : IUserService
     {
         private IRepository<User> _userRepository;
 
-        public LoginUserService(IRepository<User> userRepository)
+        public UserService(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
         }
 
         public IEnumerable<User> GetUserDetails(LoginFormModel loginUser)
         {
-            return _userRepository.GetAll().Where(x => x.UserName == loginUser.Username && x.Password == loginUser.Password);
+            return _userRepository.GetAll().Where(x => x.Username == loginUser.Username && x.Password == loginUser.Password);
         }
     }
 }

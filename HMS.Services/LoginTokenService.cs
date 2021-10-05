@@ -25,7 +25,7 @@ namespace HMS.Services.Services
         {
             var Claims = new List<Claim>
             {
-                new Claim("type", "Admin"),
+                new Claim(ClaimTypes.Role, "Admin"),
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:JwtKey"]));
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_config["JWT:JwtExpireDays"]));

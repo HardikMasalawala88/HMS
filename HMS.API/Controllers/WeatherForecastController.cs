@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HMS.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase

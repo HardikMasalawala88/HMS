@@ -22,10 +22,10 @@ namespace HMS.API.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly ILoginTokenService _loginService;
-        private readonly ILoginUserService _loginUserService;
+        private readonly IUserService _loginUserService;
         private IConfiguration _config;
         private HospitalContext _context;
-        public AccountController(ILogger<AccountController> logger, ILoginTokenService loginService, ILoginUserService loginUserService, HospitalContext context, IConfiguration config)
+        public AccountController(ILogger<AccountController> logger, ILoginTokenService loginService, IUserService loginUserService, HospitalContext context, IConfiguration config)
         {
             _logger = logger;
             _loginService = loginService;
@@ -40,15 +40,12 @@ namespace HMS.API.Controllers
         {
             if (loginUser.Username == null && loginUser.Password != null)
             {
-                TempData["errorMsg"] = "UserName Or Password Is Not Matched..!";
                 return "";
             }
             else
             {
                 string token = _loginService.GenerateLoginToken();
                 var loggedInUser = _loginUserService.GetUserDetails(loginUser);
-                //var loggedInUser = _context.Users.Where(x => x.UserName == loginUser.Username && x.Password == loginUser.Password)
-                                                // .FirstOrDefault();
                 return token;
             }
         }
