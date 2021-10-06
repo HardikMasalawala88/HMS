@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HMS.Data\HMS.Data.csproj" />
     <ProjectReference Include="..\HMS.Repository\HMS.Repository.csproj" />
   </ItemGroup>
 

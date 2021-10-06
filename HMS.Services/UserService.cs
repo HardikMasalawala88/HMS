@@ -1,5 +1,6 @@
 ﻿using HMS.Data.ContextModels;
 using HMS.Data.FormModels;
+using HMS.Repository.Interface;
 using HMS.Repository.Repository;
 using HMS.Services.Interface;
 using System;
@@ -12,16 +13,34 @@ namespace HMS.Services
 {
     public class UserService : IUserService
     {
-        private IRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly ApplicationContext _context;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IUserRepository userRepository, ApplicationContext context)
         {
             _userRepository = userRepository;
+            _context = context;
         }
 
-        public IEnumerable<User> GetUserDetails(LoginFormModel loginUser)
+        public UserFM Create(UserFM userFM)
         {
-            return _userRepository.GetAll().Where(x => x.Username == loginUser.Username && x.Password == loginUser.Password);
+            try
+            {
+                User user = new User();
+                _userRepository.InsertUser(user);
+            }
+            catch (Exception)
+            {
+                
+            }
+            return userFM;
+        }
+
+        public User GetUserDetails(LoginFormModel loginUser)
+        {
+            User userInfo = _userRepository.GetUsers().Where(x => x.Username == loginUser.Username && 
+                                                    x.Password == loginUser.Password).FirstOrDefault();
+            return userInfo;
         }
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace HMS.Data.ContextModels
 {
-    public class HospitalContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationContext : DbContext
     {
-        public HospitalContext(DbContextOptions<HospitalContext> options) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
 
@@ -24,12 +24,17 @@ namespace HMS.Data.ContextModels
             modelBuilder.Entity<Role>().HasData(
                new Role
                {
-                   Id=1,
-                   Name= "Admin"
+                   RoleId = 1,
+                   Name = "SuperAdmin"
                },
                new Role
                {
-                   Id = 2,
+                   RoleId = 2,
+                   Name = "Admin"
+               },
+               new Role
+               {
+                   RoleId = 3,
                    Name = "User"
                }
            );
@@ -45,21 +50,8 @@ namespace HMS.Data.ContextModels
                    MobileNo = "9879555131",
                    Gender = "Male",
                    RoleId = 1,
-                   Username = "Admin1",
-                   Password = "Admin1"
-               },
-               new User
-               {
-                   Id = 2,
-                   Name = "Sejal",
-                   Address = "101,Paal",
-                   City = "Surat",
-                   EmailId = "sejal22@gmail.com",
-                   MobileNo = "81569992354",
-                   Gender = "FeMale",
-                   RoleId = 2,
-                   Username = "User1",
-                   Password = "User1"
+                   Username = "SuperAdmin1",
+                   Password = "SuperAdmin1"
                }
            );
         }

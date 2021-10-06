@@ -1,4 +1,5 @@
 ﻿using HMS.Data.ContextModels;
+using HMS.Data.FormModels;
 using HMS.Repository.Interface;
 using HMS.Repository.Repository;
 using System;
@@ -11,7 +12,7 @@ namespace HMS.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private IRepository<User> _userRepository;
+        private readonly IRepository<User> _userRepository;
         public UserRepository(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
@@ -33,9 +34,10 @@ namespace HMS.Repository
             return _userRepository.GetAll();
         }
 
-        public void InsertUser(User user)
+        public User InsertUser(User user)
         {
             _userRepository.Insert(user);
+            return user;
         }
 
         public void UpdateUser(User user)

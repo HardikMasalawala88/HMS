@@ -11,7 +11,7 @@ namespace HMS.Repository.Interface
     {
         IEnumerable<User> GetUsers();
         User GetUser(long id);
-        void InsertUser(User user);
+        User InsertUser(User user);
         void UpdateUser(User user);
         void DeleteUser(long id);
     }

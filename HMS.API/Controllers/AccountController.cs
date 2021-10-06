@@ -1,6 +1,6 @@
-﻿using HMS.Data.ContextModels;
+﻿using HMS.API.Utilities;
+using HMS.Data.ContextModels;
 using HMS.Data.FormModels;
-using HMS.Repository.Repositories;
 using HMS.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,14 +21,14 @@ namespace HMS.API.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly ILoginTokenService _loginService;
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly IUserService _loginUserService;
         private IConfiguration _config;
-        private HospitalContext _context;
-        public AccountController(ILogger<AccountController> logger, ILoginTokenService loginService, IUserService loginUserService, HospitalContext context, IConfiguration config)
+        private ApplicationContext _context;
+        public AccountController(ILogger<AccountController> logger, IUserService loginUserService, ApplicationContext context, IConfiguration config)
         {
             _logger = logger;
-            _loginService = loginService;
+            _jWTTokenGenerator = new JWTTokenGenerator(config);
             _loginUserService = loginUserService;
             _context = context;
             _config = config;
@@ -44,8 +44,9 @@ namespace HMS.API.Controllers
             }
             else
             {
-                string token = _loginService.GenerateLoginToken();
-                var loggedInUser = _loginUserService.GetUserDetails(loginUser);
+                User userData = _loginUserService.GetUserDetails(loginUser);
+                Role roleData = _context.Roles.Where(x => x.RoleId == userData.RoleId).FirstOrDefault();
+                string token = _jWTTokenGenerator.GenerateLoginToken(userData.EmailId,roleData.Name);
                 return token;
             }
         }

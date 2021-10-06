@@ -10,11 +10,11 @@ namespace HMS.Repository.Repository
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly HospitalContext _context;
+        private readonly ApplicationContext _context;
         private DbSet<T> entities;
         string errorMessage = string.Empty;
 
-        public Repository(HospitalContext hospitalContext)
+        public Repository(ApplicationContext hospitalContext)
         {
             _context = hospitalContext;
             entities = hospitalContext.Set<T>();

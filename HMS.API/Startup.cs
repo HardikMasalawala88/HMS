@@ -1,10 +1,10 @@
 using HMS.Data.ContextModels;
 using HMS.Data.FormModels;
-using HMS.Repository.Repositories;
+using HMS.Repository;
+using HMS.Repository.Interface;
 using HMS.Repository.Repository;
 using HMS.Services;
 using HMS.Services.Interface;
-using HMS.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,9 +43,9 @@ namespace HMS.API
 
             services.AddControllers();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddTransient<ILoginTokenService, LoginTokenService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddDbContext<HospitalContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddDbContext<ApplicationContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HMS.API", Version = "v1" });
@@ -72,14 +72,9 @@ namespace HMS.API
                 });
             });
 
-            #region For Identity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<HospitalContext>()
-                    .AddDefaultTokenProviders();
-            #endregion
 
             #region Adding Authentication
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); 
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -103,8 +98,9 @@ namespace HMS.API
             });
             services.AddAuthorization(cfg =>
             {
-                cfg.AddPolicy("ClearanceLevel1", policy => policy.RequireClaim("ClearanceLevel", "1", "2"));
+                cfg.AddPolicy("SuperAdmin",policy => policy.RequireClaim(ClaimTypes.Role, "SuperAdmin"));
                 cfg.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+                //cfg.AddPolicy("ClearanceLevel1", policy => policy.RequireClaim("ClearanceLevel", "1", "2"));
                 //cfg.AddPolicy("User", policy => policy.RequireClaim("type", "User"));
                 //cfg.AddPolicy("ClearanceLevel2", policy => policy.RequireClaim("ClearanceLevel", "2"));
             });

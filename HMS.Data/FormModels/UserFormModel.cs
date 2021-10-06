@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Data.FormModels
 {
-    public class UserFormModel 
+    public class UserFM 
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -18,7 +18,6 @@ namespace HMS.Data.FormModels
         public string MobileNo { get; set; }
         public string Gender { get; set; }
         public long RoleId { get; set; }
-        public virtual Role Roles { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
     }

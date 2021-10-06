@@ -10,6 +10,7 @@ namespace HMS.Services.Interface
 {
     public interface IUserService
     {
-        IEnumerable<User> GetUserDetails(LoginFormModel loginUser);
+        User GetUserDetails(LoginFormModel loginUser);
+        UserFM Create(UserFM userFM);
     }
 }
