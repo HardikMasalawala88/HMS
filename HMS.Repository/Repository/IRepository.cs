@@ -12,7 +12,7 @@ namespace HMS.Repository.Repository
     {
         IEnumerable<T> GetAll();
         T GetById(long id);
-        void Insert(T entity);
+        T Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
         void Remove(T entity);

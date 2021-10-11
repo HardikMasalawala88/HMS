@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HMS.API.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(ApplicationUserRoles.SuperAdmin)]
     [ApiController]
     [Route("[controller]")]
     public class SuperAdminController : Controller

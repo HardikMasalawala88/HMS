@@ -1,3 +1,4 @@
+using HMS.API.Extension;
 using HMS.Data.ContextModels;
 using HMS.Data.FormModels;
 using HMS.Repository;
@@ -37,7 +38,6 @@ namespace HMS.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -46,32 +46,10 @@ namespace HMS.API
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddDbContext<ApplicationContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HMS.API", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    In = ParameterLocation.Header,
-                    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                          new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                            },
-                            new string[] {}
-                    }
-                });
-            });
+            services.IntegrateSwagger();
 
+            //For Identity
+            services.IdentityImplementation();
 
             #region Adding Authentication
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); 
@@ -96,14 +74,7 @@ namespace HMS.API
                     ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };
             });
-            services.AddAuthorization(cfg =>
-            {
-                cfg.AddPolicy("SuperAdmin",policy => policy.RequireClaim(ClaimTypes.Role, "SuperAdmin"));
-                cfg.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
-                //cfg.AddPolicy("ClearanceLevel1", policy => policy.RequireClaim("ClearanceLevel", "1", "2"));
-                //cfg.AddPolicy("User", policy => policy.RequireClaim("type", "User"));
-                //cfg.AddPolicy("ClearanceLevel2", policy => policy.RequireClaim("ClearanceLevel", "2"));
-            });
+            services.AuthorizationHandler();
             #endregion
         }
 
@@ -122,6 +93,7 @@ namespace HMS.API
             app.UseRouting();
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

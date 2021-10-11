@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace HMS.Data.ContextModels
 {
-    public class Role
+    public class Login : BaseEntity
     {
-        public long RoleId { get; set; }
-        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

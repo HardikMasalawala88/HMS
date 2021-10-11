@@ -19,19 +19,20 @@ namespace HMS.API.Utilities
             _configurationSettings = configuration;
         }
 
-        public string GenerateLoginToken(string userName, string role)
+        public string GenerateLoginToken(string userName, IList<string> role)
         {
-            List<Claim> claims = new List<Claim>
+            List<Claim> authClaims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userName)
             };
 
-            var Claims = new List<Claim>
+            foreach (var userRole in role)
             {
-                new Claim(ClaimTypes.Role, role),
-            };
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings["JWT:JwtKey"]));
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configurationSettings["JWT:JwtExpireDays"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -39,10 +40,11 @@ namespace HMS.API.Utilities
             var token = new JwtSecurityToken(
                 _configurationSettings["JWT:JwtIssuer"],
                 _configurationSettings["JWT:JwtIssuer"],
-                Claims,
+                authClaims,
                 expires: expires,
                 signingCredentials: creds
             );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

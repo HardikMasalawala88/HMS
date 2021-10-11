@@ -18,7 +18,7 @@ namespace HMS.Data.ContextModels
         public string MobileNo { get; set; }
         public string Gender { get; set; }
         public long RoleId { get; set; }
-        public virtual Role Role { get; set; }
+        //public virtual Role Role { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
     }

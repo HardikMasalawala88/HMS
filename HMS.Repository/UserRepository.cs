@@ -36,8 +36,8 @@ namespace HMS.Repository
 
         public User InsertUser(User user)
         {
-            _userRepository.Insert(user);
-            return user;
+            User userData = _userRepository.Insert(user);
+            return userData;
         }
 
         public void UpdateUser(User user)

@@ -27,9 +27,18 @@ namespace HMS.Services
             try
             {
                 User user = new User();
+                user.Name = userFM.Name;
+                user.EmailId = userFM.EmailId;
+                user.Gender = userFM.Gender;
+                user.Address = userFM.Address;
+                user.City = userFM.City;
+                user.MobileNo = userFM.MobileNo;
+                user.RoleId = userFM.RoleId;
+                user.Username = userFM.Username;
+                user.Password = userFM.Password;
                 _userRepository.InsertUser(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 
             }

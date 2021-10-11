@@ -39,7 +39,7 @@ namespace HMS.Repository.Repository
             return entities.SingleOrDefault(s => s.Id == id);
         }
 
-        public void Insert(T entity)
+        public T Insert(T entity)
         {
             if (entity == null)
             {
@@ -47,6 +47,7 @@ namespace HMS.Repository.Repository
             }
             entities.Add(entity);
             _context.SaveChanges();
+            return entity;
         }
 
         public void Remove(T entity)
